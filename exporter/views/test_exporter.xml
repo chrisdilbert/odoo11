@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="testing_exporter_form">
+            <field name="name">testing.exporter.form</field>
+            <field name="model">testing.exporter</field>
+            <field name="arch" type="xml">
+                <form string="Exporter">
+                    <header>
+                         <button name="test" type="object" string="Test"/>
+                     </header>
+                    <field name="name"/>
+                    <field name="root_folder"/>
+                    <field name="folders_in_root"/>
+                    <field name="folder_to_export"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="testing_exporter_tree">
+            <field name="name">testing.exporter.form</field>
+            <field name="model">testing.exporter</field>
+            <field name="arch" type="xml">
+                <tree string="Exporter">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="testing_exporter_action">
+            <field name="name">Testing Exporter</field>
+            <field name="res_model">testing.exporter</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+
+        </record>
+    </data>
+</openerp>
