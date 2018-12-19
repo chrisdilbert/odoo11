@@ -46,7 +46,7 @@ class TestExporter(models.Model):
     @api.model
     def test(self):
         try:
-            l = '\n'.join([ name for name in os.listdir(self.root_folder) if os.path.isdir(os.path.join(self.root_folder, name)) ])
+            l = '\n'.join([ self.root_folder + '/' + name for name in os.listdir(self.root_folder) if os.path.isdir(os.path.join(self.root_folder, name)) ])
             self.write({'folders_in_root': l,'name': 'done'})
         except Exception as e:
             raise UserError(e)
