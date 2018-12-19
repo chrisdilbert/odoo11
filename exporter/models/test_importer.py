@@ -1,9 +1,5 @@
-
 from odoo import models, fields, api
 from odoo.tools.translate import _
-import datetime
-import itertools
-import operator
 from odoo.exceptions import UserError, ValidationError
 from collections import namedtuple
 import os
@@ -11,7 +7,7 @@ import zipfile
 from io import StringIO, BytesIO
 import base64
 import odoo
-from os import listdir
+
 class TestExporter(models.Model):
     _name = 'testing.exporter'
     _description = "Withholding"
@@ -50,7 +46,7 @@ class TestExporter(models.Model):
     @api.model
     def test(self):
         try:
-            l = '\n'.join([d for d in os.listdir(self.root_folder) if os.path.isdir(d)])
+            l = '\n'.join([ name for name in os.listdir(self.root_folder) if os.path.isdir(os.path.join(self.root_folder, name)) ])
             self.write({'folders_in_root': l,'name': 'done'})
         except Exception as e:
             raise UserError(e)
@@ -62,10 +58,9 @@ class TestExporter(models.Model):
 
         if self.folders_in_root:
             folders= str.splitlines(self.folders_in_root)
-            folders_new = str.splitlines(self.folders_in_root)
+            folders_new = folders[:]
             for idx, path in enumerate(folders):
-                if idx<= self.quantity-1:
-
+                if idx < self.quantity:
                     try:
                         buff = BytesIO()
                         self.zipdir(dirPath=path, zipFilePath=buff, includeDirInZip=True)
@@ -78,7 +73,7 @@ class TestExporter(models.Model):
                             'res_model': self._name
                         })
                         buff.close()
-                        del folders_new[idx]
+                        del folders_new[0]
                     except Exception as e:
                         print(e)
             self.write({'folders_in_root': '\n'.join(folders_new)})
