@@ -12,7 +12,7 @@
 
                     <header>
 
-                        <button name="test2" type="object" string="Test"/>
+                      
                      </header>
                            <notebook>
                             <page name="public" string="First Steo">
@@ -27,8 +27,7 @@
                                 <page name="public" string="Second Step"><group>
                                     <field name="quantity"/>
                                     <field name="folders_in_root"/>
-                                    <field name="folder_to_export"/>
-                                      <button name="test2" type="object" string="Step 1"/>
+                                    <button name="test2" type="object" string="Step 2"/>
                                 </group>
                             </page>
                            </notebook>
