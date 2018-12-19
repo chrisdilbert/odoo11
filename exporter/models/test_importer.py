@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 from odoo import models, fields, api
 from odoo.tools.translate import _
 import datetime
@@ -20,33 +20,9 @@ class TestExporter(models.Model):
     root_folder = fields.Char()
     folders_in_root = fields.Text()
     folder_to_export = fields.Text()
+    quantity = fields.Integer()
 
     def zipdir(self,dirPath=None, zipFilePath=None, includeDirInZip=True):
-        """Create a zip archive from a directory.
-
-        Note that this function is designed to put files in the zip archive with
-        either no parent directory or just one parent directory, so it will trim any
-        leading directories in the filesystem paths and not include them inside the
-        zip archive paths. This is generally the case when you want to just take a
-        directory and make it into a zip file that can be extracted in different
-        locations.
-
-        Keyword arguments:
-
-        dirPath -- string path to the directory to archive. This is the only
-        required argument. It can be absolute or relative, but only one or zero
-        leading directories will be included in the zip archive.
-
-        zipFilePath -- string path to the output zip file. This can be an absolute
-        or relative path. If the zip file already exists, it will be updated. If
-        not, it will be created. If you want to replace it from scratch, delete it
-        prior to calling this function. (default is computed as dirPath + ".zip")
-
-        includeDirInZip -- boolean indicating whether the top level directory should
-        be included in the archive or omitted. (default True)
-
-    """
-
         if not os.path.isdir(dirPath):
             raise OSError("dirPath argument must point to a directory. "
                           "'%s' does not." % dirPath)
@@ -81,26 +57,37 @@ class TestExporter(models.Model):
     @api.multi
     @api.model
     def test(self):
-        l = [f for f in listdir(self.root_folder)]
+        l = directories=[d for d in os.listdir(self.root_folder) if os.path.isdir(d)]
         str_dir= ''
         for d in l:
             str_dir = str_dir + self.root_folder + '/' +  d + "\n"
 
         self.write({'folders_in_root': str_dir})
-        if self.folder_to_export:
-            for path in str.splitlines(self.folder_to_export):
-                try:
-                    buff = BytesIO()
-                    self.zipdir(dirPath=path, zipFilePath=buff, includeDirInZip=True)
-                    self.env['ir.attachment'].create({
-                        'name': '{0}.zip'.format(path.replace('/', '')),
-                        'datas': base64.encodebytes(buff.getvalue()),
-                        'datas_fname': '{0}.zip'.format(path.replace('/', '')),
-                        'type': 'binary',
-                        'res_id': self.id,
-                        'res_model': self._name
-                    })
-                    buff.close()
-                except Exception as e:
-                    print(e)
+
+
+    @api.multi
+    @api.model
+    def test2(self):
+        
+        if self.folders_in_root:
+            folders= str.splitlines(self.folders_in_root)
+            folders_new = str.splitlines(self.folders_in_root)
+            for idx, path in folders:
+                if idx<= self.quantity-1:                    
+                    try:
+                        buff = BytesIO()
+                        self.zipdir(dirPath=path, zipFilePath=buff, includeDirInZip=True)
+                        self.env['ir.attachment'].create({
+                            'name': '{0}.zip'.format(path.replace('/', '')),
+                            'datas': base64.encodebytes(buff.getvalue()),
+                            'datas_fname': '{0}.zip'.format(path.replace('/', '')),
+                            'type': 'binary',
+                            'res_id': self.id,
+                            'res_model': self._name
+                        })
+                        buff.close()
+                        del folders_new[idx]
+                    except Exception as e:
+                        print(e)
+            self.write({'folders_in_root': '\n'.join(folders_new)})
 
