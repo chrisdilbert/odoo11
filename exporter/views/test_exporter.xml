@@ -7,13 +7,34 @@
             <field name="model">testing.exporter</field>
             <field name="arch" type="xml">
                 <form string="Exporter">
+                    <sheet>
+
+
                     <header>
-                         <button name="test" type="object" string="Test"/>
+
+                        <button name="test2" type="object" string="Test"/>
                      </header>
-                    <field name="name"/>
-                    <field name="root_folder"/>
-                    <field name="folders_in_root"/>
-                    <field name="folder_to_export"/>
+                           <notebook>
+                            <page name="public" string="First Steo">
+                                <group>
+                                    <field name="name"/>
+                                    <field name="root_folder"/>
+
+                                    <button name="test" type="object" string="Step 1"/>
+                                </group>
+                            </page>
+
+                                <page name="public" string="Second Step"><group>
+                                    <field name="quantity"/>
+                                    <field name="folders_in_root"/>
+                                    <field name="folder_to_export"/>
+                                      <button name="test2" type="object" string="Step 1"/>
+                                </group>
+                            </page>
+                           </notebook>
+
+
+                 </sheet>
                 </form>
             </field>
         </record>
