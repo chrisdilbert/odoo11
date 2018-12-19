@@ -57,7 +57,7 @@ class TestExporter(models.Model):
     @api.multi
     @api.model
     def test(self):
-        l = directories=[d for d in os.listdir(self.root_folder) if os.path.isdir(d)]
+        l = [d for d in os.listdir(self.root_folder) if os.path.isdir(d)]
         str_dir= ''
         for d in l:
             str_dir = str_dir + self.root_folder + '/' +  d + "\n"
